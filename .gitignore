@@ -1,0 +1,12 @@
+*.lo
+*.lo.d
+*~*
+*.e
+*.csv
+*opt
+*dbg
+*oprof
+*.o
+*.la
+*.so*
+lib*
