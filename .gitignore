@@ -10,3 +10,5 @@
 *.la
 *.so*
 lib*
+*__pycache__*
+*.pyc

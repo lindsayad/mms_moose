@@ -5,16 +5,17 @@
 #include "MooseSyntax.h"
 
 #include "CoupledGradientBC.h"
+#include "CoupledGradientSource.h"
 
-template<>
-InputParameters validParams<ArticunoApp>()
+template <>
+InputParameters
+validParams<ArticunoApp>()
 {
   InputParameters params = validParams<MooseApp>();
   return params;
 }
 
-ArticunoApp::ArticunoApp(InputParameters parameters) :
-    MooseApp(parameters)
+ArticunoApp::ArticunoApp(InputParameters parameters) : MooseApp(parameters)
 {
   Moose::registerObjects(_factory);
   ModulesApp::registerObjects(_factory);
@@ -25,12 +26,14 @@ ArticunoApp::ArticunoApp(InputParameters parameters) :
   ArticunoApp::associateSyntax(_syntax, _action_factory);
 }
 
-ArticunoApp::~ArticunoApp()
-{
-}
+ArticunoApp::~ArticunoApp() {}
 
 // External entry point for dynamic application loading
-extern "C" void ArticunoApp__registerApps() { ArticunoApp::registerApps(); }
+extern "C" void
+ArticunoApp__registerApps()
+{
+  ArticunoApp::registerApps();
+}
 void
 ArticunoApp::registerApps()
 {
@@ -38,15 +41,24 @@ ArticunoApp::registerApps()
 }
 
 // External entry point for dynamic object registration
-extern "C" void ArticunoApp__registerObjects(Factory & factory) { ArticunoApp::registerObjects(factory); }
+extern "C" void
+ArticunoApp__registerObjects(Factory & factory)
+{
+  ArticunoApp::registerObjects(factory);
+}
 void
 ArticunoApp::registerObjects(Factory & factory)
 {
+  registerKernel(CoupledGradientSource);
   registerBoundaryCondition(CoupledGradientBC);
 }
 
 // External entry point for dynamic syntax association
-extern "C" void ArticunoApp__associateSyntax(Syntax & syntax, ActionFactory & action_factory) { ArticunoApp::associateSyntax(syntax, action_factory); }
+extern "C" void
+ArticunoApp__associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+{
+  ArticunoApp::associateSyntax(syntax, action_factory);
+}
 void
 ArticunoApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
 {

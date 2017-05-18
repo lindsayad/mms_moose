@@ -25,6 +25,11 @@
     type = Diffusion
     variable = v
   [../]
+  [./u_coupled_gradient_source]
+    type = CoupledGradientSource
+    variable = u
+    v = v
+  [../]
   [./u_source]
     type = UserForcingFunction
     function = u_source_func
@@ -40,7 +45,7 @@
 [BCs]
   [./u]
     type = FunctionDirichletBC
-    boundary = ''
+    boundary = 'left right'
     function = u_func
     variable = u
   [../]
@@ -50,24 +55,6 @@
     boundary = 'left right'
     variable = v
   [../]
-  [./u_test]
-    type = CoupledGradientBC
-    variable = u
-    boundary = ''
-    v = v
-  [../]
-  [./u_fn_neumann]
-    type = FunctionNeumannBC
-    function = u_bc_func
-    variable = u
-    boundary = ''
-  [../]
-  # [./u_test]
-  #   type = NeumannBC
-  #   variable = u
-  #   boundary = 'right'
-  #   value = 8
-  # [../]
 []
 
 [Functions]
@@ -87,17 +74,13 @@
     type = ParsedFunction
     value = ''
   [../]
-  [./u_bc_func]
-    type = ParsedFunction
-    value = ''
-  [../]
 []
 
 [Preconditioning]
   [./SMP_PJFNK]
     type = SMP
     full = true
-    solve_type = PJFNK
+    solve_type = NEWTON
   [../]
 []
 
@@ -139,6 +122,18 @@
     variable = v
     function = v_func
     type = ElementL2Error
+    outputs = 'console csv'
+  [../]
+  [./L2nu]
+    type = NodalL2Error
+    variable = u
+    function = u_func
+    outputs = 'console csv'
+  [../]
+  [./L2nv]
+    variable = v
+    function = v_func
+    type = NodalL2Error
     outputs = 'console csv'
   [../]
 []
