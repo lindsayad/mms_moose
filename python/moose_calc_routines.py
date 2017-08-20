@@ -105,6 +105,23 @@ def L_momentum_laplace(uvec, p, k, eps, x, y):
     source = conv_term + visc_term + pressure_term + turbulent_visc_term
     return source
 
+def L_momentum_laplace_no_turbulence(uvec, p, x, y):
+    mu, rho = sp.var('mu rho')
+    visc_term = (-mu * divTen2(gradVec2(uvec, x, y), x, y)).transpose()
+    conv_term = rho * uvec.transpose() * gradVec2(uvec, x, y)
+    pressure_term = gradScalar2(p, x, y).transpose()
+    # print(visc_term.shape, conv_term.shape, pressure_term.shape, sep="\n")
+    source = conv_term + visc_term + pressure_term
+    return source
+
+def L_stokes(uvec, p, x, y):
+    mu, rho = sp.var('mu rho')
+    visc_term = (-mu * divTen2(gradVec2(uvec, x, y), x, y)).transpose()
+    pressure_term = gradScalar2(p, x, y).transpose()
+    # print(visc_term.shape, conv_term.shape, pressure_term.shape, sep="\n")
+    source = visc_term + pressure_term
+    return source
+
 def L_pressure(uvec, x, y):
     return -divVec2(uvec, x, y)
 
@@ -354,7 +371,7 @@ def mms_kernel_cases(h_list, volume_source_dict, solution_dict, base, exe_path, 
     with cd(input_dir):
         for h in h_list:
             args = [exe_path, "-i", base + ".i", "Mesh/nx=" + h, "Mesh/ny=" + h,
-                  # "mu=1.5", "rho=2.5",
+                  "mu=1.5", "rho=2.5",
                   "Outputs/csv/file_base=" + h + "_" + base,
                   "Outputs/exodus/file_base=" + h + "_" + base]
             for var, func in volume_source_dict.items():
@@ -393,7 +410,7 @@ def plot_order_accuracy(h_array, base, input_dir, optional_save_string='', bound
         equation = "y=%.1fx+%.1f" % (z[0],z[1])
         plt.scatter(np.log(h_array), np.log(data_array), label=name + "; " + equation)
     plt.legend()
-    save_string = "/home/lindsayad/Pictures/" + str(base) + boundary + optional_save_string
+    save_string = "/Users/lindad/Pictures/" + str(base) + boundary + optional_save_string
     plt.savefig(save_string + ".eps", format='eps')
     plt.savefig(save_string + ".png", format='png')
     plt.close()
