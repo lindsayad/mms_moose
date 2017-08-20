@@ -84,6 +84,13 @@ def L_momentum_traction_no_turbulence(uvec, p, x, y):
     source = conv_term + visc_term + pressure_term
     return source
 
+def L_stokes_traction(uvec, p, x, y):
+    mu, rho = sp.var('mu rho')
+    visc_term = (-mu * divTen2(gradVec2(uvec, x, y) + gradVec2(uvec, x, y).transpose(), x, y)).transpose()
+    pressure_term = gradScalar2(p, x, y).transpose()
+    source = visc_term + pressure_term
+    return source
+
 def bc_terms_momentum_traction_no_turbulence(uvec, nvec, p, x, y, parts=True):
     mu, rho = sp.var('mu rho')
     # visc_term = (-mu * nvec.transpose() * (gradVec2(uvec, x, y) + gradVec2(uvec, x, y).transpose())).transpose()
