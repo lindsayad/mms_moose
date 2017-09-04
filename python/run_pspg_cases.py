@@ -15,29 +15,23 @@ vxx = diff(u, x)
 uvec = sp.Matrix([u, v])
 
 volume_source = {
-                'vel_x' : prep_moose_input(L_stokes_traction(uvec, p, x, y)[0]),
-                'vel_y' : prep_moose_input(L_stokes_traction(uvec, p, x, y)[1]),
+                # 'vel_x' : prep_moose_input(L_stokes_traction(uvec, p, x, y)[0]),
+                # 'vel_y' : prep_moose_input(L_stokes_traction(uvec, p, x, y)[1]),
                 # 'vel_x' : prep_moose_input(L_stokes(uvec, p, x, y)[0]),
                 # 'vel_y' : prep_moose_input(L_stokes(uvec, p, x, y)[1]),
-                # 'vel_x' : prep_moose_input(L_momentum_laplace_no_turbulence(uvec, p, x, y)[0]),
-                # 'vel_y' : prep_moose_input(L_momentum_laplace_no_turbulence(uvec, p, x, y)[1]),
+                'vel_x' : prep_moose_input(L_momentum_traction_no_turbulence(uvec, p, x, y)[0]),
+                'vel_y' : prep_moose_input(L_momentum_traction_no_turbulence(uvec, p, x, y)[1]),
                 'p' : prep_moose_input(L_pressure(uvec, x, y))}
 solution_dict = {'vel_x' : u, 'vel_y' : v, 'p' : p, 'vxx' : vxx}
 
 # h_list = ['5', '10', '20', '40']
 # h_array = np.array([.2, .1, .05, .025])
-h_list = ['5', '10', '20']
-h_array = np.array([.2, .1, .05])
-base = "pspg_mms_test"
-input_dir = "/Users/lindad/projects/moose/modules/navier_stokes/test/tests/ins/lid_driven"
+h_list = ['4', '8', '16', '32']
+h_array = np.array([.25, .125, .0625, .03125])
+base = "pspg_reform_mms_test"
+input_dir = "/Users/lindad/projects/moose/modules/navier_stokes/test/tests/ins/lid_driven/pspg"
 exe_path = "/Users/lindad/projects/moose/modules/navier_stokes/navier_stokes-opt"
-# mms_bc_cases(h_list, neumann_source_dict, volume_source, solution_dict, bounds_dict, base,
-#              "/home/lindsayad/projects/articuno/articuno-opt", "/home/lindsayad/projects/articuno", test_var="u")
 mms_kernel_cases(h_list, volume_source, solution_dict, base, exe_path, input_dir)
 
-optional_save_string='element_errors_pspg_include_grad_q2_q2_stokes_consistent_p_by_parts_traction'
+optional_save_string='element_errors_pspg_reform_q1_q1_p_no_parts_traction_full_ns_alpha_1e0_smp'
 plot_order_accuracy(h_array, base, input_dir, optional_save_string=optional_save_string)
-# plot_order_accuracy(h_array, base, input_dir, boundary='left', optional_save_string=optional_save_string)
-# plot_order_accuracy(h_array, base, input_dir, boundary='right', optional_save_string=optional_save_string)
-# plot_order_accuracy(h_array, base, boundary='top', optional_save_string=optional_save_string)
-# plot_order_accuracy(h_array, base, boundary='bottom', optional_save_string=optional_save_string)

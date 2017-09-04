@@ -418,6 +418,6 @@ def plot_order_accuracy(h_array, base, input_dir, optional_save_string='', bound
         plt.scatter(np.log(h_array), np.log(data_array), label=name + "; " + equation)
     plt.legend()
     save_string = "/Users/lindad/Pictures/" + str(base) + boundary + optional_save_string
-    plt.savefig(save_string + ".eps", format='eps')
+    # plt.savefig(save_string + ".eps", format='eps')
     plt.savefig(save_string + ".png", format='png')
     plt.close()
