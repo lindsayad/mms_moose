@@ -7,7 +7,9 @@
   u = vel_x
   v = vel_y
   p = p
-  alpha = 1e-6
+  alpha = 1e-4
+  order = FIRST
+  family = LAGRANGE
 []
 
 [Mesh]
@@ -32,18 +34,12 @@
 
 [Variables]
   [./vel_x]
-    order = SECOND
-    family = LAGRANGE
   [../]
 
   [./vel_y]
-    order = SECOND
-    family = LAGRANGE
   [../]
 
   [./p]
-    order = SECOND
-    family = LAGRANGE
   [../]
 []
 
@@ -52,16 +48,6 @@
   [./mass]
     type = INSMass
     variable = p
-    u = vel_x
-    v = vel_y
-  [../]
-
-  [./mass_pspg]
-    type = INSMassPSPG
-    variable = p
-    u = vel_x
-    v = vel_y
-    p = p
   [../]
 
   # # x-momentum, time
@@ -72,12 +58,10 @@
 
   # x-momentum, space
   [./x_momentum_space]
-    type = INSMomentumChild
+    type = INSMomentumLaplaceForm
     variable = vel_x
-    u = vel_x
-    v = vel_y
-    p = p
     component = 0
+    stabilize = false
   [../]
 
   # # y-momentum, time
@@ -88,12 +72,10 @@
 
   # y-momentum, space
   [./y_momentum_space]
-    type = INSMomentumChild
+    type = INSMomentumLaplaceForm
     variable = vel_y
-    u = vel_x
-    v = vel_y
-    p = p
     component = 1
+    stabilize = false
   [../]
 
   [./vel_x_source]
@@ -188,7 +170,7 @@
 
 [Preconditioning]
   [./SMP]
-    type = FDP
+    type = SMP
     full = true
     solve_type = 'NEWTON'
   [../]
