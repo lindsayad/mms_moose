@@ -7,7 +7,7 @@
   u = vel_x
   v = vel_y
   p = p
-  alpha = 1e-4
+  alpha = 1e-6
   order = FIRST
   family = LAGRANGE
 []
@@ -183,6 +183,7 @@
   # dt = .5
   # dtmin = .5
   # petsc_options = '-snes_test_display'
+  petsc_options = '-snes_converged_reason -ksp_converged_reason'
   petsc_options_iname = '-pc_type -pc_factor_shift_type'
   petsc_options_value = 'lu NONZERO'
   # petsc_options_iname = '-pc_type -pc_asm_overlap -sub_pc_type -sub_pc_factor_levels'
